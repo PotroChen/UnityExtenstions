@@ -33,9 +33,6 @@ public static class AssetDatabaseExtensions
             }
             else
             {
-                if (serializedAsset is Mesh m)//Mesh比较特殊，Copy之前要先Clear掉(不然,顶点位置不会更改)
-                    m.Clear();
-
                 EditorUtility.CopySerialized(asset, serializedAsset);//Copy 序列化信息到 原本的资源内，不然引用会有问题(Unity引擎的问题)
                 return serializedAsset;
             }
