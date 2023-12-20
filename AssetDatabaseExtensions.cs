@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -33,13 +33,20 @@ public static class AssetDatabaseExtensions
             }
             else
             {
+                if (serializedAsset is Mesh m)
+                    m.Clear(false);
+
                 EditorUtility.CopySerialized(asset, serializedAsset);//Copy 序列化信息到 原本的资源内，不然引用会有问题(Unity引擎的问题)
+
                 return serializedAsset;
             }
         }
         else
         {
-            AssetDatabase.CreateAsset(asset, path);
+            if (asset is GameObject go)
+                PrefabUtility.SaveAsPrefabAsset(go, path);
+            else
+                AssetDatabase.CreateAsset(asset, path);
             return asset;
         }
     }
@@ -52,7 +59,7 @@ public static class AssetDatabaseExtensions
      * 一般情况使用不到这个函数，如果想通过这种方式更改unity默认的引用的话，就此放弃吧。
      * Unity的引用是同时记录了fileId(prefab内部的localID)和guid,guid改了但是fileID找不到，引用还是会missing的
      */
-    public static void SetAssetGUID(string path,string guid)
+    public static void SetAssetGUID(string path, string guid)
     {
         //fileFormatVersion: 2 是可以的
         int lastIndexOfAssets = Application.dataPath.LastIndexOf("Assets");
