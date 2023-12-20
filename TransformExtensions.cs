@@ -16,22 +16,26 @@ public static class TransformExtensions
 		return path;
 	}
 
-	public static string GetChildPath(this Transform self,Transform child)
-	{
+    	public static string GetChildPath(this Transform self, Transform child)
+    	{
 		string path = child.gameObject.name;
 		Transform parent = child.parent;
 		while (parent != self)
 		{
-			if (parent == null)
+		    if (parent == null)
+		    {
+			if (self == child)
+			    return "";
+			else
 			{
-				Debug.LogError("Must be child");
-				break;
+			    throw new Exception($"{child.name} is not child of {self.name}");
 			}
-			path = parent.name + "/" + path;
-			parent = parent.parent;
+		    }
+		    path = parent.name + "/" + path;
+		    parent = parent.parent;
 		}
 		return path;
-	}
+    	}
 
 	public static Transform RecursiveFindChild(this Transform self, string childName)
 	{
